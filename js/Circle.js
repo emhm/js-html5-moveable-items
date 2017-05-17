@@ -1,5 +1,4 @@
 var Circle = GameItem.extend({
-
 	//Draw circle
 	draw: function() {
 		var context = this.context;
@@ -12,19 +11,9 @@ var Circle = GameItem.extend({
 		return this;
 	},
 
-	// Compares x, y with objects bounds
-	//
-	// Since the circle is drawn from the center
-	// there is slightly different compare method
-	//
-	// TODO: This isn't perfect, needs to check actual bounds
-	//		 and not just a square box
-	inBounds: function(mx, my) {
-		var topX = (this.x - this.width / 2),
-			topY = (this.y - this.width / 2);
-
-		return  (topX <= mx) && (topX + this.width >= mx) && 
-				(topY <= my) && (topY + this.width >= my);
+	//Returns back the item offsets
+	offset: function() {
+		return { x: this.width / 2, y: this.height / 2 };
 	},
 
 });

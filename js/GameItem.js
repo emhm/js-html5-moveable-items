@@ -32,10 +32,18 @@ var GameItem = BaseClass.extend({
 		return this;
 	},
 
+	//Returns back the item offsets
+	offset: function() {
+		return { x: 0, y: 0 };
+	},
+
 	//Compares x, y with objects bounds
 	inBounds: function(mx, my) {
-		return  (this.x <= mx) && (this.x + this.width >= mx) && 
-				(this.y <= my) && (this.y + this.height >= my);
+		var topX = (this.x - this.offset().x),
+			topY = (this.y - this.offset().y);
+
+		return  (topX <= mx) && (topX + this.width >= mx) && 
+				(topY <= my) && (topY + this.width >= my);
 	},
 
 	//onMouseDown internal handler

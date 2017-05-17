@@ -37,12 +37,13 @@ var Game = {
 		this.canvas.on('mousedown', function(e) { self.onMouseDown(e); });
 		this.canvas.on('mouseup', 	function(e) { self.onMouseUp(e);   });
 		this.canvas.on('mousemove', function(e) { self.onMouseMove(e); });
+		this.canvas.on('mouseleave',function(e) { self.onMouseLeave(e);});
 
 		//Setup navigation click handler
 		$('#sidebar li').on('click', function(sender) { self.onAddShapeClick(this); });
 
 		//Setup tick handler
-		setInterval(function() { self.draw(); }, 30);
+		setInterval(function() { self.draw(); }, 20);
 		this.running = true;
 
 		return this;
@@ -53,7 +54,7 @@ var Game = {
 		// TODO:
 		// Verify the object being passed is 
 		// derived from BaseClass
-
+		
 		//Set parent values
 		item.canvas = this.canvas;
 		item.context = this.context;
@@ -143,10 +144,34 @@ var Game = {
 			return false;
 		}
 
-		var mouse = this.getMouse(e);
-		this.itemSelected.x = mouse.x - this.cacheMouseX;
-		this.itemSelected.y = mouse.y - this.cacheMouseY;   
+		var mouse = this.getMouse(e),
+			posX, posY,
+			minX = this.itemSelected.offset().x,
+			maxX = this.canvas.width() - this.itemSelected.width + this.itemSelected.offset().x,
+			minY = this.itemSelected.offset().y,
+			maxY = this.canvas.height() - this.itemSelected.height + this.itemSelected.offset().y;
+
+		//Clamp x and y positions to prevent object from dragging outside of canvas
+		posX = mouse.x - this.cacheMouseX;
+		posX = (posX < minX) ? minX : ((posX > maxX) ? maxX : posX);
+		posY = mouse.y - this.cacheMouseY;
+		posY = (posY < minY) ? minY : ((posY > maxY) ? maxY : posY);
+
+		this.itemSelected.x = posX;
+		this.itemSelected.y = posY;   
+
 		this.redraw = true;
+	},
+
+	//onMouseLeave
+	onMouseLeave: function(e) {
+		this.dragging = false;
+
+		if(this.itemSelected !== undefined) {
+			this.itemSelected.dragging = false;
+		}
+
+		this.itemSelected = undefined;
 	},
 
 	//Called when a shape is selected from the sidebar
@@ -171,25 +196,12 @@ var Game = {
 
 	//Get relative mouse x and y (to canvas)
 	getMouse: function(e) {
-		var _x = 0, 
-			_y = 0,
-			offset = this.canvas.offset();
-
-		//Check if the page has been scrolled
-		if (e.pageX || e.pageY) { 
-			_x = e.pageX;
-			_y = e.pageY;
-		}
-		else { 
-			_x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
-			_y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
-		} 
-
-		//Subtract the canvas offsets
-		_x -= offset.left;
-		_y -= offset.top;
+		//Get the bounding rect and subtract it's offset
+		var bRect = this.canvas[0].getBoundingClientRect();
+		mouseX = (e.clientX - bRect.left) * (this.canvas.width() / bRect.width);
+		mouseY = (e.clientY - bRect.top) * (this.canvas.height() / bRect.height);
 
 		//Return back the cordinates
-		return { x: _x, y: _y };
+		return { x: mouseX, y: mouseY };
 	},
 }
