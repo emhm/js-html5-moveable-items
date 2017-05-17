@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JS Move Shapes</title>
+
+	<!-- Font Awesome Stylesheet -->
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- Default Stylesheet  -->
+	<link rel="stylesheet" type="text/css" href="./styles.css">
+
+	<!-- jQuery Library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<!-- Underscore JS Library -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+	<!-- Default JS ** TODO: minify ** -->
+	<script src="./js/BaseClass.js"></script>
+	<script src="./js/Game.js"></script>
+	<script src="./js/GameItem.js"></script>
+	<script src="./js/Circle.js"></script>
+	<script src="./js/Square.js"></script>
+</head>
+<body>
+
+	<header id="header-main">
+		<h1>JS Move Shapes</h1>
+	</header>
+
+	<div id="sidebar">
+		<h3>Click a shape to add it</h3>
+		<ul>
+			<li data-shape="circle"><i class="fa fa-circle" aria-hidden="true"></i>Circle</li>
+			<li data-shape="square"><i class="fa fa-square" aria-hidden="true"></i>Square</li>
+		</ul>
+	</div>
+
+	<div class="container">
+		<canvas id="board" width="640" height="640"></canvas>
+	</div>
+
+	<script type="text/javascript">
+
+		//Start the game with defaults
+		var game = Game.init();
+
+	</script>
+</body>
+</html>
